@@ -3,7 +3,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { setItemToLocalStorage } from '../helpers/helper'
 import { User, Lock } from 'lucide-react'
-import { STORAGE_KEYS } from '../config/config'
+import { API_ROUTES, STORAGE_KEYS } from '../config/config'
+import axiosInstance from '../config/axiosInstance'
 
 const Login = () => {
     const [username, setUsername] = useState("")
@@ -19,7 +20,7 @@ const Login = () => {
         setError("")
         setLoading(true)
         try {
-            const response = await axios.post("http://localhost:8080/api/v1/user/login", {
+            const response = await axiosInstance.post(API_ROUTES.USER_LOGIN, {
                 name: username,
                 password,
             })
