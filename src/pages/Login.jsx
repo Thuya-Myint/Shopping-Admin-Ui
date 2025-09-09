@@ -5,6 +5,7 @@ import { setItemToLocalStorage } from '../helpers/helper'
 import { User, Lock } from 'lucide-react'
 import { API_ROUTES, STORAGE_KEYS } from '../config/config'
 import axiosInstance from '../config/axiosInstance'
+import { useUser } from '../context/UserContext'
 
 const Login = () => {
     const [username, setUsername] = useState("")
@@ -12,6 +13,7 @@ const Login = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const navigate = useNavigate()
+    const { setUserData } = useUser()
 
 
     const handleSubmit = async () => {
@@ -29,6 +31,8 @@ const Login = () => {
             if (response.data.success) {
                 const allowedPaths = response.data.data.allowedPaths
                 console.log("allowed paths", allowedPaths)
+
+                setUserData(response.data.data)
                 setItemToLocalStorage(STORAGE_KEYS.USER_DATA, response.data.data)
                 setItemToLocalStorage(STORAGE_KEYS.TOKEN, response.data.token)
 
@@ -39,6 +43,7 @@ const Login = () => {
                 setError("Invalid credentials, please try again.")
             }
         } catch (error) {
+
             setError("Something went wrong. Please try again.")
         } finally {
             setLoading(false)
