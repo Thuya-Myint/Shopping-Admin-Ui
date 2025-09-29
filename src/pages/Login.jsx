@@ -6,6 +6,7 @@ import { User, Lock } from 'lucide-react'
 import { API_ROUTES, STORAGE_KEYS } from '../config/config'
 import axiosInstance from '../config/axiosInstance'
 import { useUser } from '../context/UserContext'
+import { toast } from 'react-toastify'
 
 const Login = () => {
     const [username, setUsername] = useState("")
@@ -26,18 +27,19 @@ const Login = () => {
                 name: username,
                 password,
             })
-            console.log("response ", response)
+            // console.log("response user login", response.data.message)
 
             if (response.data.success) {
+                toast.success(response.data.message)
                 const allowedPaths = response.data.data.allowedPaths
-                console.log("allowed paths", allowedPaths)
+                // console.log("allowed paths", allowedPaths)
 
                 setUserData(response.data.data)
                 setItemToLocalStorage(STORAGE_KEYS.USER_DATA, response.data.data)
                 setItemToLocalStorage(STORAGE_KEYS.TOKEN, response.data.token)
 
                 navigate("/dashboard")
-                window.location.reload()
+                // window.location.reload()
 
             } else {
                 setError("Invalid credentials, please try again.")

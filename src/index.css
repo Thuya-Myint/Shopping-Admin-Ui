@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+*{
+    user-select: none;
+    -webkit-user-select:none;
+}
 /* 
 @theme color{
     --color-

@@ -5,6 +5,7 @@ import { routes } from './config/routes'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { Navigate } from 'react-router-dom'
 import { UserProvider, useUser } from './context/UserContext'
+import { ToastContainer } from "react-toastify"
 
 const AppContent = () => {
   const { userData } = useUser()
@@ -15,9 +16,15 @@ const AppContent = () => {
   // }, [])
   const router = useMemo(() => {
     // if (!userData) return
+
     const allowedUserRoutes = userData?.allowedPaths || ["/login"]
+
+
+
     const storedTabs = getItemFromLocalStorage(STORAGE_KEYS.CLICKED_TAB)
-    console.log("route", allowedUserRoutes)
+    // console.log("route", allowedUserRoutes)
+
+
     const filteredRoutes = routes.map((route) => {
       if (route.children) {
         const allowedChildren = route.children.filter(child => allowedUserRoutes?.includes(child.path))
@@ -35,7 +42,7 @@ const AppContent = () => {
       element: userData ? <Navigate to={storedTabs ? storedTabs : filteredRoutes[0]?.children?.[0].path} /> : <Navigate to="/login" />
     })
 
-    console.log("allowed routes ", filteredRoutes)
+    // console.log("allowed routes ", filteredRoutes)
     return createBrowserRouter(filteredRoutes)
 
   }, [userData])
@@ -48,6 +55,11 @@ const AppContent = () => {
 
 const App = () => (
   <UserProvider>
+    <ToastContainer
+      theme='light'
+      closeOnClick={false}
+      draggable={true}
+    />
     <AppContent />
   </UserProvider>
 )

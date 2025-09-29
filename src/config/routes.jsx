@@ -9,7 +9,8 @@ import MainLayout from "../layouts/MainLayout"
 import { Navigate } from "react-router-dom"
 
 
-import { MdDashboard, MdPersonAdd, MdCategory, MdStraighten, MdInventory, MdShoppingCart } from "react-icons/md";
+import { MdDashboard, MdPersonAdd, MdCategory, MdStraighten, MdInventory, MdShoppingCart, MdSettings } from "react-icons/md";
+import UserSetting from "../pages/Setting"
 
 export const sideBarItems = [
     {
@@ -42,6 +43,12 @@ export const sideBarItems = [
         path: "/order",
         icon: <MdShoppingCart />,
     },
+    {
+        name: "Setting",
+        path: "/setting",
+        icon: <MdSettings />,
+    },
+
 ];
 export const routes = [
     {
@@ -87,7 +94,12 @@ export const routes = [
                 name: "Order",
                 path: "/order",
                 element: <Order />
-            }
+            },
+            {
+                name: "Setting",
+                path: "/setting",
+                element: <UserSetting />
+            },
         ]
     }
 ]
