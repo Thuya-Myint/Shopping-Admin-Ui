@@ -11,7 +11,12 @@ export const API_ROUTES = {
 
     USER_LOGIN: "/user/login",
     UPDATE_USER: "/user",
-    GET_ALL_UNIT: "/unit"
+    GET_ALL_UNIT: "/unit",
+    POST_NEW_UNIT: "/unit",
+    UPDATE_UNIT: "/unit",
+    DELETE_UNIT: "/unit"
+
+
 }
 
 // export const light = {
