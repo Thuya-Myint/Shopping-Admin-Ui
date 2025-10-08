@@ -22,6 +22,8 @@ const Unit = () => {
         try {
             response = await deleteUnit(id)
             if (response.success) {
+                setUpdatingItemId(null)
+                setUnitName("")
                 toast.success(response.message)
                 setAllUnits(allUnits.filter(unit => unit._id !== id))
             }
