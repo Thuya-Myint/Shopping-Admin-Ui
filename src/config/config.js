@@ -31,7 +31,13 @@ export const API_ROUTES = {
     //role
     GET_ALL_ROLE: "/role",
     POST_NEW_ROLE: "/role",
-    UPDATE_ROLE: "/role"
+    UPDATE_ROLE: "/role",
+
+    //product
+    POST_NEW_PRODUCT: "/product",
+    GET_ALL_PRODUCT: "/product",
+    UPDATE_PRODUCT: "/product",
+    DELETE_PRODUCT: "/product"
 
 
 }
