@@ -31,7 +31,7 @@ const Login = () => {
 
             if (response.data.success) {
                 toast.success(response.data.message)
-                const allowedPaths = response.data.data.allowedPaths
+                // const allowedPaths = response.data.data.role.allowedPaths    
                 // console.log("allowed paths", allowedPaths)
 
                 setUserData(response.data.data)

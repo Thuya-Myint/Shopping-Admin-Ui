@@ -11,7 +11,7 @@ import { useLocation } from "react-router-dom";
 const MainLayout = () => {
 
     const userData = getItemFromLocalStorage(STORAGE_KEYS.USER_DATA);
-    const allowedRoutes = userData?.allowedPaths || [];
+    const allowedRoutes = userData?.role?.allowedPaths || [];
 
 
     const { logout } = useUser()

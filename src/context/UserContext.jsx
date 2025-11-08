@@ -12,9 +12,9 @@ export const UserProvider = ({ children }) => {
         setUserData(storedData)
     }, [])
 
-    const changeUserData = (data) => {
-        setItemToLocalStorage(STORAGE_KEYS.USER_DATA, data)
-        setUserData(data)
+    const changeUserData = () => {
+        logout()
+
     }
     // useEffect(() => {
     //     // console.log("userdata ", userData)

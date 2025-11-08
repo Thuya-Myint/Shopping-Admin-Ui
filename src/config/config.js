@@ -12,6 +12,9 @@ export const API_ROUTES = {
     //user auth
     USER_LOGIN: "/user/login",
     UPDATE_USER: "/user",
+    GET_ALL_ADMIN: "/user/admin",
+    POST_NEW_USER: "/user/",
+    UPDATE_USER_ROLE: "/user/role",
 
     //unit
     GET_ALL_UNIT: "/unit",
@@ -23,7 +26,13 @@ export const API_ROUTES = {
     GET_ALL_CATEGORY: "/category",
     POST_NEW_CATEGORY: "/category",
     UPDATE_CATEGORY: "/category/id",
-    DELETE_CATEGORY: "/category/id"
+    DELETE_CATEGORY: "/category/id",
+
+    //role
+    GET_ALL_ROLE: "/role",
+    POST_NEW_ROLE: "/role",
+    UPDATE_ROLE: "/role"
+
 
 }
 

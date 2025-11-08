@@ -17,7 +17,7 @@ const AppContent = () => {
   const router = useMemo(() => {
     // if (!userData) return
 
-    const allowedUserRoutes = userData?.allowedPaths || ["/login"]
+    const allowedUserRoutes = userData?.role.allowedPaths || ["/login"]
 
 
 

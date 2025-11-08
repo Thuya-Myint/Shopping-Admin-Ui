@@ -71,7 +71,7 @@ const Category = () => {
         <div>
             <div className='border-l-4  border-indigo-500 p-2 px-4 bg-blue-400 w-fit text-white'>Add new unit</div>
 
-            <form action="" className='flex gap-2 mt-2' onSubmit={(e) => {
+            <form action="" className='flex gap-2 mt-2 ' onSubmit={(e) => {
                 e.preventDefault()
                 addOrUpdateCategory()
             }}>
@@ -96,7 +96,7 @@ const Category = () => {
                 </button>
             </form>
 
-            <div className='border-l-4 mt-4 border-indigo-500 p-2 px-4 bg-blue-400 w-fit text-white'>Add Category</div>
+            <div className='border-l-4 mt-10 border-indigo-500 p-2 px-4 bg-blue-400 w-fit text-white'>Add Category</div>
             <div className='w-1/3 max-h-[500px] overflow-auto '>
                 <div className=' bg-gradient-to-br from-blue-400/60 to-indigo-500/60 flex items-center justify-between mt-2 rounded-md p-2'>
                     <div>No</div>

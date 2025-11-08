@@ -10,9 +10,8 @@ const UserSetting = () => {
     const [password, setPassword] = useState()
     const [email, setEmail] = useState("")
     const [file, setFile] = useState(null)
-    const [previewImg, setPreviewImg] = useState(userData?.imageUrl || "")
+    const [previewImg, setPreviewImg] = useState(userData?.imageUrl)
     const [loading, setLoading] = useState(false)
-
 
     const onChangeFile = (file) => {
         if (!file) return
@@ -25,7 +24,7 @@ const UserSetting = () => {
 
     const handleUserUpdate = async () => {
         try {
-            if (name === userData.name && email.trim() === "") {
+            if (!previewImg && name === userData.name && email.trim() === "") {
                 return toast.info("Validataion failed!")
             }
             const formData = new FormData()
@@ -39,8 +38,8 @@ const UserSetting = () => {
             console.log(response)
 
             if (response.success) {
-                changeUserData(response.data)
-                toast(response.message)
+                changeUserData()
+                toast(response.message + "Please Login Again!")
 
             }
             // console.log("form data ", formData.getAll("image"))
@@ -64,6 +63,8 @@ const UserSetting = () => {
                 <div className='flex flex-col items-center gap-2'>
 
                     <img src={previewImg} alt="" className='w-20 h-20 rounded-full  cursor-pointer ' />
+
+
                     <div className='text-sm cursor-pointer active:bg-gray-700 bg-gray-800 text-white px-4 py-1 rounded-md'
                         onClick={triggerFileOpen}>
                         edit
