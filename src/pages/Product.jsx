@@ -119,7 +119,7 @@ const Product = () => {
                                         </span>
                                     </td>
 
-                                    <td className="p-3">
+                                    <td className="p-3 ">
                                         {p.discount > 0 ? (
                                             <span className="text-red-600 font-semibold">
                                                 {p.discount}%
@@ -129,7 +129,7 @@ const Product = () => {
                                         )}
                                     </td>
 
-                                    <td className="p-3 flex gap-3">
+                                    <td className="p-3  ">
                                         <button
                                             onClick={() => openUpdateModal(p)}
                                             className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
@@ -139,7 +139,7 @@ const Product = () => {
 
                                         <button
                                             onClick={() => handleDelete(p._id)}
-                                            className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                                            className="px-3 ml-2co py-1 bg-red-600 text-white rounded hover:bg-red-700"
                                         >
                                             Delete
                                         </button>

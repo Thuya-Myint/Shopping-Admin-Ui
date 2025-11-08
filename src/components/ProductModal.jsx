@@ -182,8 +182,8 @@ const ProductModal = ({ open, onClose, onSuccess, productToEdit }) => {
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white w-full max-w-3xl rounded-xl shadow-xl p-6 relative">
+        <div className="fixed inset-0  bg-black/40 flex items-center justify-center z-50">
+            <div className="bg-white max-h-[90vh] overflow-auto w-full max-w-3xl rounded-xl shadow-xl p-6 relative">
 
                 {/* Title */}
                 <div className="flex justify-between items-center mb-4">
