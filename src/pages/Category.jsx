@@ -1,153 +1,173 @@
 import React, { useEffect, useState } from 'react';
-import { FaP, FaPencil } from "react-icons/fa6";
+import { FaPencil } from "react-icons/fa6";
 import { TiDelete } from "react-icons/ti";
-import { getAllCategories, createCategory, updateCategory, deleteCategory } from '../services/category.service';
+import {
+    getAllCategories,
+    createCategory,
+    updateCategory,
+    deleteCategory
+} from '../services/category.service';
 import { toast } from 'react-toastify';
-const Category = () => {
 
-    const [categoryName, setCategoryName] = useState("")
-    const [allCategories, setAllCategories] = useState([])
-    const [updatingCategoryId, setUpdatingCategoryId] = useState()
+const Category = () => {
+    const [categoryName, setCategoryName] = useState("");
+    const [allCategories, setAllCategories] = useState([]);
+    const [updatingCategoryId, setUpdatingCategoryId] = useState();
 
     useEffect(() => {
-        handleGetAllCategories()
-    }, [])
+        handleGetAllCategories();
+    }, []);
 
     const addOrUpdateCategory = async () => {
-        if (!categoryName || categoryName.trim() === "") return
+        if (!categoryName || categoryName.trim() === "") return;
+
         try {
             const response = updatingCategoryId
-                ?
-                await updateCategory(updatingCategoryId, { name: categoryName })
-                :
-                await createCategory({ name: categoryName })
+                ? await updateCategory(updatingCategoryId, { name: categoryName })
+                : await createCategory({ name: categoryName });
 
             if (response.success) {
-                const updatedData = allCategories.map(
-                    category => category._id === updatingCategoryId
-                        ?
-                        response.data
-                        :
-                        category
-                )
-                console.log("updatedata ", updatedData)
-                setCategoryName("")
-                setAllCategories(updatingCategoryId ? updatedData : [...allCategories, response.data])
-                toast.success(response.message)
-                setUpdatingCategoryId()
-            }
+                const updatedData = allCategories.map(category =>
+                    category._id === updatingCategoryId ? response.data : category
+                );
 
+                toast.success(response.message);
+                setCategoryName("");
+                setAllCategories(
+                    updatingCategoryId ? updatedData : [...allCategories, response.data]
+                );
+                setUpdatingCategoryId();
+            }
         } catch (error) {
-            console.log("error add new category", error)
+            console.log("error add new category", error);
         }
-    }
+    };
+
     const handleGetAllCategories = async () => {
         try {
-
-
-            const response = await getAllCategories()
-            if (response.success) {
-                setAllCategories(response.data)
-            } else {
-                setAllCategories([])
-
-            }
+            const response = await getAllCategories();
+            setAllCategories(response.success ? response.data : []);
         } catch (error) {
-            console.log("error handleGetAllCategories", error)
+            console.log("error handleGetAllCategories", error);
         }
-    }
+    };
+
     const handleDeleteCategory = async (id) => {
         try {
-            const response = await deleteCategory(id)
+            const response = await deleteCategory(id);
             if (response.success) {
-                toast.success(response.message)
-                setAllCategories(allCategories.filter((item) => item._id !== id))
+                toast.success(response.message);
+                setAllCategories(allCategories.filter(item => item._id !== id));
             }
         } catch (error) {
-            console.log("handleDelete Category", error)
+            console.log("handleDelete Category", error);
         }
-    }
-    return (
-        <div>
-            <div className='border-l-4  border-indigo-500 p-2 px-4 bg-blue-400 w-fit text-white'>Add new unit</div>
+    };
 
-            <form action="" className='flex gap-2 mt-2 ' onSubmit={(e) => {
-                e.preventDefault()
-                addOrUpdateCategory()
-            }}>
+    return (
+        <div className="p-6">
+
+            {/* HEADER */}
+            <div className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-500 
+                            text-white px-4 py-2 rounded-md w-fit shadow-md">
+                Add New Category
+            </div>
+
+            {/* FORM */}
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    addOrUpdateCategory();
+                }}
+                className="flex gap-3 mt-4"
+            >
                 <input
                     value={categoryName}
                     type="text"
-                    className='p-2 border-2 border-gray-400 focus:border-gray-800 rounded-md'
-                    placeholder='Category '
-                    onChange={(e) => {
-                        setCategoryName(e.target.value)
-                    }} />
-                <button
-                    className={`bg-slate-600 text-white p-2 px-4 rounded-md active:opacity-30 `}
-                >
-                    {
+                    placeholder="Category name"
+                    onChange={(e) => setCategoryName(e.target.value)}
+                    className="border border-gray-300 rounded-lg px-3 py-2 
+                               focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50"
+                />
 
-                        updatingCategoryId ?
-                            "Update"
-                            :
-                            "Add"
-                    }
+                <button
+                    className="bg-blue-600 text-white px-5 rounded-lg shadow 
+                               hover:bg-blue-700 active:scale-95 transition"
+                >
+                    {updatingCategoryId ? "Update" : "Add"}
                 </button>
             </form>
 
-            <div className='border-l-4 mt-10 border-indigo-500 p-2 px-4 bg-blue-400 w-fit text-white'>Add Category</div>
-            <div className='w-1/3 max-h-[500px] overflow-auto '>
-                <div className=' bg-gradient-to-br from-blue-400/60 to-indigo-500/60 flex items-center justify-between mt-2 rounded-md p-2'>
+            {/* LIST HEADER */}
+            <div className="mt-10 text-lg font-semibold bg-gradient-to-r from-indigo-600 to-blue-500 
+                            text-white px-4 py-2 rounded-md w-fit shadow-md">
+                Category List
+            </div>
+
+            {/* CATEGORY LIST */}
+            <div className="w-full sm:w-2/3 max-h-[480px] overflow-auto mt-4">
+
+                {/* Table Header */}
+                <div className="grid grid-cols-3 px-4 py-2 bg-gray-200 rounded-md shadow-sm text-gray-700 font-medium">
                     <div>No</div>
                     <div>Name</div>
-                    <div>Action</div>
+                    <div className="text-center">Action</div>
+                </div>
 
-                </div >
-                {
-                    allCategories.map((item, index) => (
-                        <div key={index} className={`flex items-center mt-1  justify-between rounded-xl p-2 
-                                ${index % 2 === 0 ?
-                                'bg-blue-400/40'
-                                :
-                                'bg-indigo-500/30'
-
-                            }`}>
-                            {
-                                updatingCategoryId && updatingCategoryId === item._id ?
-                                    "Updating"
-                                    :
-                                    <>
-                                        <div>{index + 1}</div>
-                                        <div>{item.name}</div>
-                                    </>
-                            }
-                            <div className='flex items-center gap-1'>
-                                {
-                                    updatingCategoryId && updatingCategoryId === item._id ?
-                                        <div className='text-sm bg-green-300 p-2 text-black/50 cursor-pointer rounded-md py-1' onClick={() => {
-                                            setUpdatingCategoryId()
-                                            setCategoryName("")
-                                        }}>
-                                            Cancel Update
-                                        </div>
-                                        :
-                                        <FaPencil
-                                            className='text-blue-400 cursor-pointer'
-                                            onClick={() => {
-                                                setUpdatingCategoryId(item._id)
-                                                setCategoryName(item.name)
-                                            }}
-
-                                        />
-                                }
-                                <TiDelete className='text-red-500 text-xl cursor-pointer' onClick={() => handleDeleteCategory(item._id)} />
+                {/* Items */}
+                {allCategories.map((item, index) => (
+                    <div
+                        key={index}
+                        className={`
+                            grid grid-cols-3 items-center px-4 py-3 mt-2 rounded-md transition
+                            ${index % 2 === 0 ? "bg-gray-50" : "bg-gray-100"}
+                            shadow-sm
+                        `}
+                    >
+                        {/* Index + Name */}
+                        {updatingCategoryId === item._id ? (
+                            <div className="col-span-2 text-blue-600 font-medium">
+                                Updating...
                             </div>
+                        ) : (
+                            <>
+                                <div>{index + 1}</div>
+                                <div className="font-medium">{item.name}</div>
+                            </>
+                        )}
+
+                        {/* Actions */}
+                        <div className="flex justify-center gap-3">
+                            {updatingCategoryId === item._id ? (
+                                <button
+                                    className="text-sm bg-yellow-400 px-3 py-1 rounded-md 
+                                               text-gray-900 shadow cursor-pointer"
+                                    onClick={() => {
+                                        setUpdatingCategoryId();
+                                        setCategoryName("");
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                            ) : (
+                                <FaPencil
+                                    className="text-blue-500 cursor-pointer hover:text-blue-700 transition"
+                                    onClick={() => {
+                                        setUpdatingCategoryId(item._id);
+                                        setCategoryName(item.name);
+                                    }}
+                                />
+                            )}
+
+                            <TiDelete
+                                className="text-red-500 text-xl cursor-pointer hover:text-red-700 transition"
+                                onClick={() => handleDeleteCategory(item._id)}
+                            />
                         </div>
-                    ))
-                }
+                    </div>
+                ))}
             </div>
-        </div >
+        </div>
     );
 };
 

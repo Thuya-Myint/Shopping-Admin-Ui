@@ -4,18 +4,25 @@ import LoadingV1 from './LoadingV1'
 import { createUser, updateUserRole } from '../services/user.service'
 import { toast } from 'react-toastify'
 import { IoCloseCircle } from 'react-icons/io5'
-const UserModal = ({ isUpdatingUser, setIsAddingUser, setUsers, userData = null, setIsUpdatingUser, isAddingUser }) => {
+
+const UserModal = ({
+    isUpdatingUser,
+    setIsAddingUser,
+    setUsers,
+    userData = null,
+    setIsUpdatingUser,
+    isAddingUser
+}) => {
+
     const [username, setUsername] = useState(userData?.name || "")
     const [password, setPassword] = useState("")
     const [role, setRole] = useState([])
     const [selectedRole, setSelectedRole] = useState(userData?.role?._id)
 
-
-
-
     useEffect(() => {
         handleFetchRole()
     }, [])
+
     const handleFetchRole = async () => {
         try {
             const response = await getAllRole()
@@ -26,88 +33,130 @@ const UserModal = ({ isUpdatingUser, setIsAddingUser, setUsers, userData = null,
             console.log("handleFetchRole() error", error)
         }
     }
+
     const handleCreateUser = async () => {
         try {
-
-            const response = isAddingUser ?
-                await createUser({
+            const response = isAddingUser
+                ? await createUser({
                     name: username,
                     password,
                     role: selectedRole
                 })
-                :
-                await updateUserRole(userData?._id, { role: selectedRole })
-            if (response.success) {
+                : await updateUserRole(userData?._id, { role: selectedRole })
 
-                console.log("update user", response.data)
+            if (response.success) {
                 toast.success(response?.message)
                 setIsAddingUser(false)
                 setIsUpdatingUser(false)
                 setSelectedRole(null)
                 setUsername("")
-                isAddingUser ?
-                    setUsers(prev => [...prev, response.data])
-                    :
-                    setUsers(prev => prev.map(user => user._id === userData._id ? response.data : user))
 
+                isAddingUser
+                    ? setUsers(prev => [...prev, response.data])
+                    : setUsers(prev => prev.map(user =>
+                        user._id === userData._id ? response.data : user
+                    ))
             }
+
         } catch (error) {
             console.log("handeCreateUser error()", error)
         }
     }
+
     return (
-        <div className='w-screen h-screen flex justify-center items-center gap-2 bg-black/30 absolute inset-0'>
+        <div className='fixed inset-0 w-screen h-screen bg-black/40 backdrop-blur-sm 
+                        flex justify-center items-center z-50'>
 
-            <form className='bg-white shadow-lg shadow-black/20 rounded-lg p-4 flex flex-col' onSubmit={(e) => {
-                e.preventDefault()
-                handleCreateUser()
+            {/* MODAL */}
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault()
+                    handleCreateUser()
+                }}
+                className='bg-white rounded-xl shadow-xl shadow-black/20 
+                           p-6 flex flex-col animate-fadeIn'
+            >
+                {/* HEADER */}
+                <h1 className='text-2xl font-semibold text-gray-800 mb-5'>
+                    {isUpdatingUser ? 'Update User' : 'Add User'}
+                </h1>
 
-            }}>
-                <h1 className='text-xl font-light mb-4'>{isUpdatingUser ? 'Update' : 'Add'} user</h1>
-                <div className='flex gap-2'>
-                    <input value={username} disabled={isUpdatingUser} onChange={(e) => setUsername(e.target.value)}
-                        type="text" className='border-gray-800 border-2 p-2 outline-0 rounded-lg ' placeholder='username' />
-                    {
-                        isAddingUser ? <input value={password} onChange={(e) => setPassword(e.target.value)}
-                            type="password" className='border-gray-800 border-2 p-2 outline-0 rounded-lg ' placeholder='password' />
-                            : ""
-                    }
+                {/* INPUTS */}
+                <div className='flex gap-3'>
+                    <input
+                        value={username}
+                        disabled={isUpdatingUser}
+                        onChange={(e) => setUsername(e.target.value)}
+                        type="text"
+                        placeholder='username'
+                        className='flex-1 border border-gray-300 rounded-lg px-3 py-2
+                                   focus:ring-2 focus:ring-blue-400 outline-none 
+                                   transition bg-gray-50'
+                    />
+
+                    {isAddingUser && (
+                        <input
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            type="password"
+                            placeholder='password'
+                            className='flex-1 border border-gray-300 rounded-lg px-3 py-2
+                                       focus:ring-2 focus:ring-blue-400 outline-none
+                                       transition bg-gray-50'
+                        />
+                    )}
                 </div>
-                <div className='mt-4 '>
 
-                    <div className='text-xl'>
-                        Role
-                    </div>
-                    {
-                        role?.length > 0 ?
-                            <div className='grid grid-cols-3 gap-2 mt-2'>
-                                {
-                                    role?.map((item, index) => (
-                                        <div key={index} className={`rounded-lg p-2 cursor-pointer 
-                                            ${selectedRole === item?._id ? "bg-blue-400 text-white" : "bg-slate-100/60 "}`}
-                                            onClick={() => setSelectedRole(item?._id)}
-                                        >{item?.name}</div>
-                                    ))
-                                }
-                            </div> :
-                            <LoadingV1 />
-                    }
+                {/* ROLE SECTION */}
+                <div className='mt-6'>
+                    <div className='text-gray-700 font-medium text-base mb-2'>Select Role</div>
+
+                    {role?.length > 0 ? (
+                        <div className='grid grid-cols-3 gap-2'>
+                            {role.map((item, index) => (
+                                <div
+                                    key={index}
+                                    onClick={() => setSelectedRole(item?._id)}
+                                    className={`cursor-pointer rounded-lg py-2 px-3 text-center
+                                        border transition-all
+                                        ${selectedRole === item?._id
+                                            ? "bg-blue-500 text-white border-blue-500 shadow"
+                                            : "bg-gray-100 text-gray-700 border-gray-300 hover:bg-gray-200"
+                                        }`}
+                                >
+                                    {item?.name}
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <LoadingV1 />
+                    )}
                 </div>
-                <div className='mt-6 flex justify-end'>
-                    <button className='bg-slate-200 px-4 py-2 rounded-lg cursor-pointer'>
+
+                {/* SUBMIT */}
+                <div className='mt-8 flex justify-end'>
+                    <button
+                        type='submit'
+                        className='bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg 
+                                   shadow-lg transition active:scale-95'
+                    >
                         {isUpdatingUser ? 'Update User' : 'Create User'}
                     </button>
                 </div>
             </form>
-            <button className='bg-gradient-to-br from-red-400 to-red-500 shadow-white/50 cursor-pointer shadow-lg p-2 rounded-full text-white '
+
+            {/* CLOSE BUTTON */}
+            <button
+                className='absolute top-6 right-6 p-2 rounded-full text-white 
+                           bg-gradient-to-br from-red-500 to-red-600 shadow-lg 
+                           hover:scale-105 transition'
                 onClick={() => {
                     setIsAddingUser(false)
                     setIsUpdatingUser(false)
                     setUsername("")
-
-                }}>
-
-                <IoCloseCircle className='text-xl' />
+                }}
+            >
+                <IoCloseCircle className='text-3xl' />
             </button>
         </div>
     )

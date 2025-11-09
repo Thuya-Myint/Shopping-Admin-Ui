@@ -2,6 +2,7 @@ import React from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { getItemFromLocalStorage, setItemToLocalStorage } from "../helpers/helper";
 import { sideBarItems } from "../config/routes"; // fixed to singular (your code had sideBarItems vs sideBarItem)
+import logo from '../assets/images/logo2.png'
 import { STORAGE_KEYS } from "../config/config";
 import { useUser } from "../context/UserContext";
 import { useLocation } from "react-router-dom";
@@ -27,7 +28,8 @@ const MainLayout = () => {
         <div className="flex h-screen">
             {/* Sidebar */}
             <aside className={`w-60  bg-gray-800 text-white flex flex-col p-4`}>
-                <h2 className="text-lg font-bold mb-6">Shopping Admin Ui</h2>
+                <h2 className="text-lg font-bold mb-6"><img src={logo} alt="Shomyn logo" className='w-28 h-16 rounded-2xl'
+                /></h2>
                 <nav className="flex flex-col gap-2">
                     {allowedSideBarItems.map((item) => (
                         <NavLink

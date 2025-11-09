@@ -3,8 +3,10 @@ import { sideBarItems } from '../config/routes'
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { createRole, updateRole } from '../services/role.service';
 import { toast } from 'react-toastify';
+
 const RoleModal = (props) => {
     const { setIsAddingRole, dataToUpdate, isUpdatingRole, setIsUpdatingRole, setDataToUpdate } = props
+
     const [allowedPaths, setAllowedPaths] = useState(dataToUpdate?.allowedPaths || [])
     const [name, setName] = useState(dataToUpdate?.name || "")
     const [description, setDescription] = useState(dataToUpdate?.description || "")
@@ -16,81 +18,131 @@ const RoleModal = (props) => {
             setAllowedPaths([...allowedPaths, path])
         }
     }
+
     const clearInput = () => {
         setIsUpdatingRole(false)
         setIsAddingRole(false)
         setAllowedPaths([])
         setName("")
-        setDescription()
-        setDataToUpdate()
+        setDescription("")
+        setDataToUpdate(null)
     }
+
     const handleCreateUpdateRole = async () => {
-        console.log("erwe")
-        if (!name || name.trim() === "" || allowedPaths.length === 0) {
-            return toast.warn("Invalid input")
+        if (!name || allowedPaths.length === 0) {
+            return toast.warn("Invalid input");
         }
         try {
             const commonPayload = {
                 name,
                 description: description || "",
                 allowedPaths
-            }
-            const finalDbFn = isUpdatingRole ? await updateRole({ ...commonPayload, id: dataToUpdate._id }) : await createRole(commonPayload)
-            const response = await finalDbFn
+            };
+
+            const finalFn = isUpdatingRole
+                ? await updateRole({ ...commonPayload, id: dataToUpdate._id })
+                : await createRole(commonPayload);
+
+            const response = await finalFn;
 
             if (response?.success) {
-                console.log("wwerwerwerwer")
-                toast.success(response.message)
-                clearInput()
+                toast.success(response.message);
+                clearInput();
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
+
     return (
-        <div className='w-screen h-screen flex justify-center items-center bg-black/30 absolute inset-0'
-            onClick={(e) => {
+        <div
+            className='fixed inset-0 w-screen h-screen bg-black/40 backdrop-blur-sm 
+                       flex justify-center items-center z-50'
+            onClick={() => setIsAddingRole(false)}
+        >
 
-                setIsAddingRole(false)
-            }}>
-            <div className='bg-white shadow-lg shadow-black/20 rounded-lg p-4 flex flex-col'
+            {/* MODAL */}
+            <div
+                className='bg-white rounded-xl shadow-xl shadow-black/20 p-6 w-full max-w-md'
                 onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
+                    e.preventDefault();
+                    e.stopPropagation();
                 }}
-
             >
-                <h1 className='text-xl font-light mb-4'>
-                    {isUpdatingRole ? `Update permission for ${dataToUpdate?.name}` : 'Create New Role'}
+
+                {/* HEADER */}
+                <h1 className='text-2xl font-semibold text-gray-800 mb-5'>
+                    {isUpdatingRole
+                        ? `Update permission for ${dataToUpdate?.name}`
+                        : 'Create New Role'}
                 </h1>
-                <div className='flex gap-2'>
 
-                    <input value={name} onChange={(e) => { setName(e.target.value) }} className='border-gray-800 border-2 p-2 outline-0 rounded-lg w-1/2 bg-slate-200' placeholder='role name' />
-                    <input value={description} onChange={(e) => { setDescription(e.target.value) }} className='border-gray-800 border-2 p-2 outline-0 rounded-lg w-1/2 bg-slate-200 ' placeholder='role name' />
+                {/* INPUTS */}
+                <div className='flex flex-wrap gap-3 w-full'>
+
+                    <input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder='role name'
+                        className='flex-1 min-w-[45%] border border-gray-300 rounded-lg px-3 py-2
+                                   bg-gray-50 focus:ring-2 focus:ring-blue-400 outline-none'
+                    />
+
+                    <input
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder='role description'
+                        className='flex-1 min-w-[45%] border border-gray-300 rounded-lg px-3 py-2
+                                   bg-gray-50 focus:ring-2 focus:ring-blue-400 outline-none'
+                    />
 
                 </div>
-                <h1 className='text-lg mt-4 font-light mb-4'>Permit Page</h1>
-                <div className='grid grid-cols-3 gap-2 text-md font-light'>
-                    {
-                        sideBarItems.map(item => (
 
-                            <div key={item.path} className={`bg-gradient-to-br shadow-md shadow-black/10 p-2 rounded-md cursor-pointer ${allowedPaths.includes(item.path) ? 'from-blue-300 to-sky-400' : ' from-slate-50 to-slate-300/60'}`}
-                                onClick={() => handleSelectPaths(item.path)}>
-                                {item.name}
-                            </div>
-                        ))
-                    }
+                {/* PERMISSION SECTION */}
+                <h1 className='text-lg font-medium text-gray-700 mt-6 mb-2'>
+                    Permit Page
+                </h1>
+
+                <div className='grid grid-cols-3 gap-3'>
+                    {sideBarItems.map(item => (
+                        <div
+                            key={item.path}
+                            onClick={() => handleSelectPaths(item.path)}
+                            className={`
+                                rounded-lg p-2 cursor-pointer text-center text-sm transition
+                                border shadow-sm
+                                ${allowedPaths.includes(item.path)
+                                    ? "bg-blue-500 text-white border-blue-500 shadow"
+                                    : "bg-gray-100 border-gray-300 text-gray-700 hover:bg-gray-200"
+                                }
+                            `}
+                        >
+                            {item.name}
+                        </div>
+                    ))}
                 </div>
-                <div className='mt-4 flex gap-2'>
-                    <button className='w-4/5 bg-gradient-to-br cursor-pointer from-green-300 to-emerald-400 p-2 rounded-lg' onClick={handleCreateUpdateRole}>
+
+                {/* FOOTER BUTTONS */}
+                <div className='mt-6 flex gap-3'>
+                    <button
+                        className='flex-1 bg-blue-600 text-white py-2 rounded-lg
+                                   shadow hover:bg-blue-700 transition active:scale-95'
+                        onClick={handleCreateUpdateRole}
+                    >
                         {isUpdatingRole ? "Update" : "Create"}
                     </button>
-                    <div className='bg-gradient-to-br from-red-400 cursor-pointer to-orange-500 w-1/5 text-white text-2xl flex items-center justify-center rounded-lg' onClick={clearInput}>
-                        <IoIosCloseCircleOutline />
-                    </div>
+
+                    <button
+                        className='w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center
+                                   shadow hover:bg-red-600 transition'
+                        onClick={clearInput}
+                    >
+                        <IoIosCloseCircleOutline className='text-2xl' />
+                    </button>
                 </div>
-            </div >
-        </div >
+
+            </div>
+        </div>
     )
 }
 
